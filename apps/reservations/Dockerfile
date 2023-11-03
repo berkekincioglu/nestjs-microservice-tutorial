@@ -24,6 +24,8 @@ COPY yarn.lock ./
 
 # RUN npm install -g yarn
 RUN yarn install --prod
+RUN yarn remove bcrypt
+RUN yarn add bcrypt
 
 COPY  --from=development /usr/src/app/dist ./dist
 
