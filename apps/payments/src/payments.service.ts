@@ -10,19 +10,37 @@ export class PaymentsService {
     this.configService.get('STRIPE_SECRET_KEY'),
   );
 
-  async createCharge({ card, amount }: CreateChargeDto) {
-    const paymentMethod = await this.stripe.paymentMethods.create({
-      type: 'card',
-      card,
-    });
+  async createCharge({ amount }: CreateChargeDto) {
+    // const paymentMethod = await this.stripe.paymentMethods.create({
+    //   card,
+    //   type: 'card',
+    // });
 
+    // const paymentIntent = await this.stripe.paymentIntents.create({
+    //   payment_method: paymentMethod.id,
+    //   amount: amount * 100,
+    //   confirm: true,
+    //   automatic_payment_methods: {
+    //     allow_redirects: 'never',
+    //     enabled: true,
+    //   },
+    //   payment_method_types: ['pm_card_visa'],
+    //   currency: 'usd',
+    // });
+    // return paymentIntent;
     const paymentIntent = await this.stripe.paymentIntents.create({
-      payment_method: paymentMethod.id,
       amount: amount * 100,
       confirm: true,
-      payment_method_types: ['card'],
       currency: 'usd',
+      payment_method: 'pm_card_visa',
+      automatic_payment_methods: {
+        allow_redirects: 'never',
+        enabled: true,
+      },
     });
+
+    console.log('payment : ', paymentIntent);
+
     return paymentIntent;
   }
 }
